@@ -1,0 +1,27 @@
+.user-spaces(){
+	margin-top: @margin-top;
+	padding-top: @padding-top;
+	padding-bottom: @padding-bottom;
+	margin-bottom: @margin-bottom;
+}
+
+.bgCustomColor() when (iscolor(@bg-color))	{ background-color: @bg-color; }
+.customColorLightness(@color) when (lightness(@color) > 60%)	{ color: #666; }
+.customColor() when (iscolor(@bg-color))	{ color: @bg-color; .customColorLightness(@bg-color); }
+.bgCustomImage() when not (@bg-image = url()) { background-image: @bg-image; }
+
+#@{el}-main 						{ .user-spaces; }
+.elements-sidebar-wrap #@{el}-main 	{ .user-spaces; }
+
+#@{el}{
+									  .bgCustomColor();
+									  .bgCustomImage();
+									  background-repeat: @bg-repeat;
+									  background-attachment: @bg-scroll;
+									  background-position: @bg-position;
+	.info-count 					{ .customColor(); }
+}
+
+.@{el}{
+	clear:both;
+}

@@ -1,0 +1,10 @@
+@include: common.neon
+
+type:
+	label: Taxonomy
+	type: select
+	selected: items
+	default:
+		items: "Categories"
+		locations: "Locations"
+	help: "Choose taxonomy do display in the menu"

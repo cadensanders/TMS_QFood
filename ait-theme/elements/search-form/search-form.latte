@@ -1,0 +1,206 @@
+{include $element->common('header')}
+
+{* VARIABLES *}
+{var $type = $el->option('type')}
+
+{var $selectedKeyword = isset($_REQUEST['s']) && $_REQUEST['s'] != "" ? $_REQUEST['s'] : ''}
+{var $selectedCat = isset($_REQUEST['category']) && $_REQUEST['category'] != "" ? $_REQUEST['category'] : ''}
+{var $selectedLoc = isset($_REQUEST['location']) && $_REQUEST['location'] != "" ? $_REQUEST['location'] : ''}
+{var $selectedRad = isset($_REQUEST['rad']) && $_REQUEST['rad'] != "" ? $_REQUEST['rad'] : ''}
+{var $selectedPrice = isset($_REQUEST['price']) && $_REQUEST['price'] != "" ? $_REQUEST['price'] : ''}
+
+{var $selectedLocationAddress = isset($_REQUEST['location-address']) && $_REQUEST['location-address'] != "" ? $_REQUEST['location-address'] : ''}
+{var $selectedLat = isset($_REQUEST['lat']) && $_REQUEST['lat'] != "" ? $_REQUEST['lat'] : ''}
+{var $selectedLon = isset($_REQUEST['lon']) && $_REQUEST['lon'] != "" ? $_REQUEST['lon'] : ''}
+
+{* set default values only if page IS NOT SEARCH RESULT *}
+{if defined('AIT_ADVANCED_SEARCH_ENABLED') and !isset($_REQUEST['a'])}
+	{var $advancedSearchOptions = aitOptions()->getOptionsByType('ait-advanced-search')}
+	{var $advancedSearchOptions = $advancedSearchOptions['general']}
+	{if $advancedSearchOptions['useDefaults']}
+		{var $selectedLocationAddress = $selectedLocationAddress != "" ? $selectedLocationAddress : $advancedSearchOptions['defaultLocation']['address']}
+		{var $selectedRad = $selectedRad != "" ? $selectedRad : $advancedSearchOptions['defaultRadius']}
+		{var $selectedLat = $advancedSearchOptions['defaultLocation']['latitude']}
+		{var $selectedLon = $advancedSearchOptions['defaultLocation']['longitude']}
+	{/if}
+{/if}
+
+{capture $searchKeyword}
+	<input type="text" name="s" id="searchinput-text" placeholder="{__ 'Search keyword'}" class="searchinput" value="{$selectedKeyword}">
+{/capture}
+
+{capture $searchCategory}
+	{var $categories = get_categories(array('taxonomy' => 'ait-items', 'hide_empty' => 0, 'parent' => 0))}
+	{if isset($categories) && count($categories) > 0}
+		<div class="category-search-wrap">
+			<span class="category-clear"><i class="fa fa-times"></i></span>
+			<select data-placeholder="{__ 'Category'}" name="category" class="category-search default-disabled" style="display: none;">
+			<option label="-"></option>
+			{!= recursiveCategory($categories, $selectedCat, 'ait-items', "")}
+			</select>
+		</div>
+	{/if}
+{/capture}
+
+{capture $searchRadius}
+	{var $radiusSet = $selectedRad != "" ? 'radius-set' : ''}
+	<div class="radius {$radiusSet}">
+		{if $type != 2}<div class="radius-toggle radius-input-visible">{__ 'Radius:'} {__ 'Off'}</div>{else}<div class="radius-toggle radius-input-visible">x {$el->option('radiusUnits')}</div>{/if}
+		<input type="hidden" name="lat" value="{$selectedLat}" id="latitude-search" class="latitude-search" disabled>
+		<input type="hidden" name="lon" value="{$selectedLon}" id="longitude-search" class="longitude-search" disabled>
+		<input type="hidden" name="runits" value="{$el->option('radiusUnits')}" disabled>
+
+		<div class="radius-display radius-input-hidden">
+			{if $type != 2}<span class="radius-text">{__ 'Radius:'}</span>{/if}
+			{if $type == 2}
+				<span class="radius-value"></span>
+				<span class="radius-units">{$el->option('radiusUnits')}</span>
+			{/if}
+		</div>
+
+		<div class="radius-popup-container radius-input-hidden">
+			{if $type != 2}
+				<div class="radius-input">
+					<span class="radius-value"></span>
+					<span class="radius-units">{$el->option('radiusUnits')}</span>
+				</div>
+			{/if}
+			<div class="radius-range">
+				<input type="range" name="rad" class="radius-search" value="{if $selectedRad}{$selectedRad}{else}0.1{/if}" min="0.1" step="0.1" max="100" disabled>
+			</div>
+			<span class="radius-popup-help">{$el->option('radiusHelp')}</span>
+			<div class="radius-action">
+				<button class="radius-popup-close ait-button" type="button" title="{__ 'Enable'}"><i class="fa fa-check"></i></button>
+				<button class="radius-clear ait-button" type="button" title="{__ 'Disable'}"><i class="fa fa-times"></i></button>
+			</div>
+		</div>
+	</div>
+{/capture}
+
+{capture $searchLocation}
+	{if defined('AIT_ADVANCED_SEARCH_ENABLED')}
+		<div class="location-search-wrap advanced-search" data-position="last">
+			<input name="location-address" class="location-search searchinput" type="text" id=location-address placeholder="{__ 'Location'}" value="{stripslashes($selectedLocationAddress)}">
+				{if $type != 2}{!$searchRadius}{/if}
+		</div>
+	{else}
+		{var $locations = get_categories(array('taxonomy' => 'ait-locations', 'hide_empty' => 0, 'parent' => 0))}
+		{if isset($locations) && count($locations) > 0}
+			<div class="location-search-wrap">
+				<span class="location-clear"><i class="fa fa-times"></i></span>
+				<select data-placeholder="{__ 'Location'}" name="location" class="location-search default-disabled" style="display: none;">
+				<option label="-"></option>
+				{!= recursiveCategory($locations, $selectedLoc, 'ait-locations', "")}
+				</select>
+
+				{if $type != 2}{!$searchRadius}{/if}
+
+			</div>
+		{/if}
+	{/if}
+{/capture}
+
+
+
+
+{if defined('AIT_FOOD_MENU_ENABLED')}
+{capture $searchPrice}
+	{* type2 is a search sentence *}
+
+	{var $priceSet = $selectedPrice != "" ? 'price-set' : ''}
+	<div class="price-search-wrap {$priceSet}">
+		{if $type != 2}
+			<div class="price-label">{__ 'Price Rating'}</div>
+			<div class="price-toggle price-input-visible"></div>
+			<div class="price-display price-input-hidden">
+
+			</div>
+
+			<div class="price-popup-container price-input-hidden">
+
+				<div class="price-range">
+					<div class="price-rating" data-rating="{$selectedPrice}"></div>
+				</div>
+				<span class="price-popup-help">{__ "Set price rating"}</span>
+				<div class="price-action">
+					<button class="price-popup-close ait-button" type="button" title="{__ 'Enable'}"><i class="fa fa-check"></i></button>
+					<button class="price-clear ait-button" type="button" title="{__ 'Disable'}"><i class="fa fa-times"></i></button>
+				</div>
+			</div>
+		{else}
+			<span class="price-clear"><i class="fa fa-times"></i></span>
+			<div class="price-rating" data-rating="{$selectedPrice}"></div>
+		{/if}
+
+
+	</div>
+{/capture}
+{/if}
+
+
+
+
+
+
+{* VARIABLES *}
+
+<div id="{$htmlId}" class="{$htmlClass} type-{$type}">
+
+	<div id="{$htmlId}-container" n:class='search-form-container, "search-form-type-{$type}"'>
+
+		<div class="ait-toggle-area-group toggle-search">
+			<a href="#" class="ait-toggle-area-btn" data-toggle=".search-form"><i class="fa fa-search"></i> {__ 'Toggle Search'}</a>
+		</div>
+
+		<form action="{$searchUrl}" method="get" class="search-form ait-toggle-area">
+
+			<div class="elm-wrapper inputs-container">
+				<div class="search-content">
+					{if $type == 2}
+
+						{var $sentence = '<span class="label">'.$el->option('sentence').'</span>'}
+						{var $sentence = str_replace('{', '</span>{', $sentence)}
+						{var $sentence = str_replace('}', '}<span class="label">', $sentence)}
+
+						{var $sentence = str_replace('{search-keyword}', $searchKeyword, $sentence)}
+						{var $sentence = str_replace('{search-category}', $searchCategory, $sentence)}
+						{var $sentence = str_replace('{search-location}', $searchLocation, $sentence)}
+						{var $sentence = str_replace('{search-radius}', $searchRadius, $sentence)}
+						{if defined('AIT_FOOD_MENU_ENABLED')}
+							{var $sentence = str_replace('{search-price}', $searchPrice, $sentence)}
+						{/if}
+						{!$sentence}
+
+					{else}
+
+						{!$searchKeyword}
+
+						{!$searchCategory}
+
+						{!$searchLocation}
+
+						{if defined('AIT_FOOD_MENU_ENABLED')}
+							{!$searchPrice}
+						{/if}
+
+					{/if}
+
+					<input type="hidden" name="a" value="true"> <!-- Advanced search -->
+					<!-- <input type="hidden" name="lang" value="{AitLangs::getCurrentLanguageCode()}">  Advanced search -->
+
+				</div>
+
+				<button type="submit" class="searchsubmit">{__ 'Search'}</button>
+
+			</div>
+
+		</form>
+	</div>
+
+</div>
+
+{if $type == 2}
+	{? wp_enqueue_script('ait-auto-grow', aitPaths()->url->ait . '/elements/search-form/design/js/libs/jquery.auto-grow-input.min.js') }
+{/if}
+
+{includePart "ait-theme/elements/search-form/javascript"}

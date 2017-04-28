@@ -1,0 +1,1 @@
+<h2 class="filter-status"><span class="items-count">{$max}</span>{__ 'Special Offers'}</h2>

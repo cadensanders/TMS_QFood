@@ -1,0 +1,35 @@
+{include $element->common('header')}
+
+<div id="{$htmlId}" class="{$htmlClass}">
+
+
+
+	{if $el->option('taxonomy') == 'all'}
+
+		<div class="cat-tabs-container">
+			<div class="cat-tabs-menu">
+				<a class="cat-option-active" href="#">{__ 'Categories'}</a>
+				<a href="#">{__ 'Locations'}</a>
+
+				<div class="cat-bg"></div>
+
+			</div>
+			<div class="cat-tabs-contents">
+				<div class="cat-tabs-content cat-option-active">
+					<!-- Categories -->
+					{includePart "portal/parts/taxonomy-category-list", taxonomy => "ait-items"}
+				</div>
+				<div class="cat-tabs-content">
+					<!-- Locations -->
+					{includePart "portal/parts/taxonomy-category-list", taxonomy => "ait-locations"}
+				</div>
+			</div>
+		</div>
+
+	{else}
+		{includePart "portal/parts/taxonomy-category-list", taxonomy => $el->option('taxonomy')}
+	{/if}
+
+</div>
+
+{includePart "ait-theme/elements/taxonomy-list/javascript"}

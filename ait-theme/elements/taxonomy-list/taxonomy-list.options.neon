@@ -1,0 +1,10 @@
+@include: common.neon
+
+taxonomy:
+	label: Display category
+	type: select
+	selected: "all"
+	default:
+		"ait-items": Item Categories
+		"ait-locations": Item Locations
+		"all": All

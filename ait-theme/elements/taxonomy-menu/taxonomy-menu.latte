@@ -1,0 +1,61 @@
+{include $element->common('header')}
+
+{* VARIABLES *}
+{var $categories = $wp->categories(array('taxonomy' => $el->option('type'), 'parent' => 0))}
+{* VARIABLES *}
+
+<div id="{$htmlId}" class="{$htmlClass}">
+	<div id="{$htmlId}-container" n:class='taxonomy-menu-container'>
+		<div class="tax-menu-heading">
+			<a href="#" class="tax-menu-heading-icon"><i class="fa fa-sliders"></i></a>
+			<a href="#" class="tax-menu-close"><i class="fa fa-times"></i></a>
+			<div class="tax-menu-item-data">
+				<span class="tax-item-title">{if $el->option('type') == 'items'}{__ 'Categories'}{else}{__ 'Locations'}{/if}</span>
+			</div>
+		</div>
+		<div class="optiscroll">
+			<div class="optiscroll-content dragscroll">
+			{if is_array($categories) && count($categories) > 0}
+				<ul class="tax-menu">
+					{foreach $categories as $category}
+						{var $cat_title = $category->title}
+						{var $cat_link = get_term_link( $category->id, $category->taxonomy )}
+						{var $cat_meta = get_option($category->taxonomy . "_category_" . $category->id)}
+
+						{var $cat_count = aitGetTermPostCount($category->taxonomy, $category->id)}
+
+						<li class="tax-menu-item">
+							<a href="{$cat_link}">
+								<div class="icon">
+								{if isset($cat_meta['icon']) and $cat_meta['icon']}
+									<img src="{$cat_meta['icon']}" alt="icon">
+								{else}
+									<span class="icon-letter">{!mb_substr($cat_title, 0, 1)}</span>
+								{/if}
+								</div>
+							</a>
+							<div class="tax-menu-item-data">
+								<a href="{$cat_link}">
+									<span class="tax-item-title">{!$cat_title}</span>
+								</a>
+
+								{if $wp->isPage && $elements->unsortable[header-map]->display && $options->layout->general->headerType == 'map'}
+									<div class="tax-menu-filter" data-cat-id="{$category->id}">
+										<i class="fa fa-eye"></i>
+									</div>
+								{/if}
+
+								<div class="tax-item-count">
+									 <span>{$cat_count}</span>
+								</div>
+							</div>
+						</li>
+					{/foreach}
+				</ul>
+			{/if}
+			</div>
+		</div>
+	</div>
+</div>
+
+{includePart "ait-theme/elements/taxonomy-menu/javascript"}

@@ -1,0 +1,20 @@
+
+@import "../../../@common/common.less";
+
+#@{el}{
+
+	.standardColor('dark') when (iscolor(@standard))	{ background: @standard; }
+	.featuredColor('dark') when (iscolor(@featured))	{ background: @featured !important; }
+	.featuredColor('border') when (iscolor(@featured))	{ border-color: @featured !important; }
+	.featuredColor('shadow') when (iscolor(@featured))	{ -moz-box-shadow: 0 0 0 4px @featured; -webkit-box-shadow: 0 0 0 4px @featured; box-shadow: 0 0 0 4px @featured; }
+
+	.ptable-item .table-header h3:before								{ .standardColor('dark'); }
+	.ptable-item.table-featured .table-header h3:before					{ .featuredColor('dark'); }
+	.ptable-item.table-featured .ptable-item-wrap           			{ .featuredColor('border'); }
+	&.layout-vertical .ptable-item.table-featured .ptable-item-wrap		{ .featuredColor('shadow'); }
+
+}
+
+.@{el} {
+	clear:both;
+}

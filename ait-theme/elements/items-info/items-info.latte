@@ -1,0 +1,34 @@
+{include $element->common('header')}
+
+<div id="{$htmlId}" class="{$htmlClass}">
+
+	{var $categories = $wp->categories(array('taxonomy' => 'ait-items', 'hide_empty' => 0))}
+	{var $locations = $wp->categories(array('taxonomy' => 'ait-locations', 'hide_empty' => 0))}
+	{var $resources = get_posts(array('post_type' => 'ait-item', 'category' => 0, 'posts_per_page' => -1))}
+	{if defined('AIT_REVIEWS_ENABLED')}
+	{var $reviews = get_posts(array('post_type' => 'ait-review', 'posts_per_page' => -1))}
+	{/if}
+
+	<span class="info-icon"><i class="fa fa-folder-open-o"></i></span>
+	<span class="info-categories">
+		<span class="info-count">{count($categories)}</span>
+		<span class="info-text">{__ 'Categories'}</span>
+	</span>
+	<span class="info-locations">
+		<span class="info-count">{count($locations)}</span>
+		<span class="info-text">{__ 'Locations'}</span>
+	</span>
+	<span class="info-resources">
+		<span class="info-count">{count($resources)}</span>
+		<span class="info-text">{__ 'Resources'}</span>
+	</span>
+	{if defined('AIT_REVIEWS_ENABLED')}
+	<span class="info-reviews">
+		<span class="info-count">{count($reviews)}</span>
+		<span class="info-text">{__ 'Reviews'}</span>
+	</span>
+	{/if}
+
+</div>
+
+{includePart "ait-theme/elements/items-info/javascript"}

@@ -1,0 +1,2 @@
+<?php
+// see header.latte

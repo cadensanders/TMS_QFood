@@ -1,0 +1,17 @@
+.user-spaces(){
+	margin-top: @margin-top;
+	padding-top: @padding-top;
+	padding-bottom: @padding-bottom;
+	margin-bottom: @margin-bottom;
+}
+
+.bgCustomColor() when (iscolor(@bg-color))			{ background-color: @bg-color; }
+.bgCustomImage() when not (iskeyword(@bg-image))	{ background-image: @bg-image; }
+
+#@{el}-main 						{ .bgCustomColor();
+									  .bgCustomImage();
+									  background-repeat: @bg-repeat;
+									  background-attachment: @bg-scroll;
+									  background-position: @bg-position;
+									  .user-spaces; }
+.elements-sidebar-wrap #@{el}-main 	{ .user-spaces; }

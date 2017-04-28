@@ -1,0 +1,17 @@
+.bgCustomColor() when (iscolor(@background-color))			{ background-color: @background-color; }
+.bgCustomImage() when not (iskeyword(@background-image)) 	{ background-image: @background-image; }
+.txtCustomColor() when (iscolor(@textColor))				{ color: @textColor; }
+
+.page-title	{
+
+	.bgCustomColor();
+	.bgCustomImage();
+	background-repeat: @background-repeat;
+	background-attachment: @background-scroll;
+	background-position: @background-position;
+	.bgCover();
+
+	h1					{ .txtCustomColor(); }
+	.page-description	{ .txtCustomColor(); }
+
+}

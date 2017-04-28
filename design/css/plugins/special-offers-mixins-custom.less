@@ -1,0 +1,51 @@
+/**************************************************/
+/*** && SPECIAL OFFERS CUSTOM MIXINS            ***/
+/**************************************************/
+
+/*** VARIABLES ************************************/
+
+/* Colors */
+
+@offer-decColor    = @theme-general-decColor;
+@offer-secdecColor = @theme-general-decColor;
+@offer-whiteText   = #fff;
+
+/* Buttons */
+
+@offer-btn-hover    = lighten(@offer-btn-bg, 2%);
+@offer-btn-radius   = 5px;
+@offer-btn-shadow   = 0 -3px 0 rgba(0,0,0,0.2) inset;
+
+/* Element */
+
+@offerImgHeight   = 290px;
+@offerImgRadius   = 4px;
+
+/* Item Detail */
+
+@itemOfferMarginTop    = 0;
+@itemOfferMoreBg       = darken(@theme-general-pageBgColor, 3%);
+@itemOfferMoreColor    = @theme-general-txtColor;
+
+/* Archive */
+
+@archiveOfferBg = rgba(0,0,0,0.02);
+
+/* Misc */
+
+@offerHoverIconBg    = @offer-decColor;
+@offerHoverIconColor = @offer-whiteText;
+
+/*** MIXINS EXTENDERS **************************/
+
+.offerButton-extend()		{ text-transform: uppercase; &:hover { .box-shadow(none); } }
+.elmOfferButton-extend()	{ text-transform: uppercase; &:hover { .box-shadow(none); } }
+.offerHvrFaIcon-extend()
+{
+	(~"& @{insideClass}")				{ background: transparent; .transition(all 0.4s); }
+	(~"&:hover @{insideClass}")			{ background: rgba(0,0,0,1); .transition(none); }
+	(~"& @{insideClass} div")			{ opacity: 1; .transition(all 0.4s); }
+	(~"&:hover @{insideClass} div")		{ opacity: 0.8; .scale(1.05); }
+}
+
+/* && end of SPECIAL OFFERS CUSTOM MIXINS */

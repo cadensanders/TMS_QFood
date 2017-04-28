@@ -1,0 +1,183 @@
+{include $el->common('header')}
+
+<div id="{$htmlId}" class="elm-item-organizer {$htmlClass}">
+
+	{var $enableCarousel = false}
+
+	{customQuery as $query,
+		type    => post,
+		tax     => category,
+		cat     => $el->option(category),
+		limit   => $el->option(count),
+		orderby => $el->option(orderby),
+		order 	=> $el->option(order)
+	}
+
+	{if $query->havePosts}
+		{var $layout = $el->option->layout}
+		{var $textRows = $el->option->textRows}
+		{var $addInfo = $el->option->addInfo}
+		{* Unified variables and data *}
+		{if $layout == box}
+			{var $enableCarousel  = $el->option->boxEnableCarousel}
+			{var $boxAlign 		  = $el->option->boxAlign}
+			{var $numOfRows       = $el->option->boxRows}
+			{var $numOfColumns    = $el->option->boxColumns}
+			{var $imageHeight     = $el->option->boxImageHeight}
+			{var $imgWidth = 640}
+		{else}
+			{var $enableCarousel  = $el->option->listEnableCarousel}
+			{var $numOfRows       = $el->option->listRows}
+			{var $numOfColumns    = $el->option->listColumns}
+			{var $imageHeight     = $el->option->listImageHeight}
+			{var $imgWidth = 220}
+		{/if}
+
+		{if $enableCarousel}
+			<div class="loading"><span class="ait-preloader">{!__ 'Loading&hellip;'}</span></div>
+		{/if}
+
+		{if $layout == box}
+			<div n:class='elm-item-organizer-container, "column-{$numOfColumns}", "layout-{$layout}", $enableCarousel ? carousel-container : carousel-disabled,' data-cols="{$numOfColumns}" data-first="1" data-last="{= ceil($query->postCount / $numOfRows)}">
+			{customLoop from $query as $item}
+				{if $enableCarousel and $iterator->isFirst($numOfRows)}
+					<div n:class="item-box, $enableCarousel ? carousel-item">
+				{/if}
+				<div n:class='item, "item{$iterator->counter}", $enableCarousel ? carousel-item, $iterator->isFirst($numOfColumns) ? item-first, $iterator->isLast($numOfColumns) ? item-last, $item->hasImage ? image-present, $boxAlign ? $boxAlign' data-id="{$iterator->counter}">
+					<a href="{$item->permalink}">
+						{if $item->hasImage}
+							{var $ratio = explode(":", $imageHeight)}
+							{var $imgHeight = ($imgWidth / $ratio[0]) * $ratio[1]}
+							<div class="item-thumbnail">
+								<div class="item-thumbnail-wrap">
+									<img src="{imageUrl $item->imageUrl, width => $imgWidth, height => $imgHeight, crop => 1}" alt="{!$item->title}">
+								</div>
+
+								<div class="item-date">
+									{if $item->hasCommentsOpen and $addInfo}
+										<div class="comments-link">
+											{if $item->commentsNumber > 1}
+												<span class="comments-count" title="{_n '%s Comment', '%s Comments'|printf: $item->commentsNumber}">
+													{$item->commentsNumber}
+												</span>
+											{elseif $item->commentsNumber == 0}
+												<span class="comments-count" title="{__ 'Leave a comment'}">
+													0
+												</span>
+											{else}
+												<span class="comments-count" title="{__ '1 Comment'}">
+													1
+												</span>
+											{/if}
+										</div><!-- .comments-link -->
+									{/if}
+
+									{var $dateIcon = $item->dateI18n}
+									{var $dateLinks = 'no'}
+									{var $dateShort = 'no'}
+
+									{includePart parts/entry-date-format, dateIcon => $dateIcon, dateLinks => $dateLinks, dateShort => $dateShort, post => $item}
+								</div>
+							</div>
+						{/if}
+
+						<div class="item-title"><h3>{!$item->title}</h3></div>
+					</a>
+
+					<div class="item-text">
+						<div class="item-excerpt"><p class="txtrows-{$textRows}">{!$item->excerpt(200)|striptags}</p></div>
+					</div>
+
+					{if $addInfo}
+					<div class="item-info">
+						<div class="item-categories">
+							{foreach $item->categories as $cat}
+								{var $term_link = get_term_link($cat->id, 'category')}
+								<a href="{$term_link}"><span class="item-category">{!$cat->title}</span></a>
+							{/foreach}
+						</div>
+					</div>
+					{/if}
+				</div>
+
+				{if $enableCarousel and $iterator->isLast($numOfRows)}
+					</div>
+				{/if}
+			{/customLoop}
+			</div>
+		{else}
+			<div n:class='elm-item-organizer-container, "column-{$numOfColumns}", "layout-{$layout}", $enableCarousel ? carousel-container : carousel-disabled,' data-cols="{$numOfColumns}" data-first="1" data-last="{= ceil($query->postCount / $numOfRows)}">
+			{customLoop from $query as $item}
+				{if $enableCarousel and $iterator->isFirst($numOfRows)}
+					<div n:class="item-box, $enableCarousel ? carousel-item">
+				{/if}
+
+				<div n:class='item, "item{$iterator->counter}", $enableCarousel ? carousel-item, $iterator->isFirst($numOfColumns) ? item-first, $iterator->isLast($numOfColumns) ? item-last, $item->hasImage ? image-present'	data-id="{$iterator->counter}">
+					<a href="{$item->permalink}">
+						{if $item->hasImage}
+							{var $ratio = explode(":", $imageHeight)}
+							{var $imgHeight = ($imgWidth / $ratio[0]) * $ratio[1]}
+							<div class="item-thumbnail">
+								<div class="item-thumbnail-wrap">
+									<img src="{imageUrl $item->imageUrl, width => $imgWidth, height => $imgHeight, crop => 1}" alt="{!$item->title}">
+								</div>
+
+								<div class="item-date">
+									{if $item->hasCommentsOpen and $addInfo}
+										<div class="comments-link">
+											{if $item->commentsNumber > 1}
+												<span class="comments-count" title="{_n '%s Comment', '%s Comments'|printf: $item->commentsNumber}">
+													{$item->commentsNumber}
+												</span>
+											{elseif $item->commentsNumber == 0}
+												<span class="comments-count" title="{__ 'Leave a comment'}">
+													0
+												</span>
+											{else}
+												<span class="comments-count" title="{__ '1 Comment'}">
+													1
+												</span>
+											{/if}
+										</div><!-- .comments-link -->
+									{/if}
+
+									{$item->date|dateI18n: 'j M'}
+								</div>
+							</div>
+						{/if}
+
+						<div class="item-title"><h3>{!$item->title}</h3></div>
+					</a>
+
+					<div class="item-text">
+						<div class="item-excerpt"><p class="txtrows-{$textRows}">{!$item->excerpt(200)|striptags}</p></div>
+					</div>
+
+					{if $addInfo}
+					<div class="item-info">
+						<div class="item-categories">
+							{foreach $item->categories as $cat}
+								{var $term_link = get_term_link($cat->id, 'category')}
+								<a href="{$term_link}"><span class="item-category">{!$cat->title}</span></a>
+							{/foreach}
+						</div>
+					</div>
+					{/if}
+				</div>
+
+				{if $enableCarousel and $iterator->isLast($numOfRows)}
+					</div>
+				{/if}
+			{/customLoop}
+			</div>
+		{/if}
+	{else}
+		<div class="elm-item-organizer-container">
+			<div class="alert alert-info">
+				{_x 'Posts', 'name of element'}&nbsp;&nbsp;|&nbsp;&nbsp;{__ 'Info: There are no items created, add some please.'}
+			</div>
+		</div>
+	{/if}
+</div>
+
+{includePart "ait-theme/elements/posts/javascript", enableCarousel => $enableCarousel}

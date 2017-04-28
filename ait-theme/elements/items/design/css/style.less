@@ -1,0 +1,21 @@
+
+@import "../../../@common/common.less";
+
+.contrastBorder() when (iscolor(@bg-color)) and (lightness(@bg-color) < 50%) and (iskeyword(@bg-image))	{ border: none; }
+
+#@{el}{
+
+}
+
+#@{el}-main {
+
+	&.striped-bg .elm-item-organizer.elm-items .item:nth-child(2n+1),
+	&.striped-bg.elm-has-bg .elm-item-organizer.elm-items .item:nth-child(2n+1)	{ background: @listBgColor; }
+
+	&.elm-has-bg .elm-items .layout-box .item	{ .contrastBorder; }
+
+}
+
+.@{el}{
+	clear:both;
+}

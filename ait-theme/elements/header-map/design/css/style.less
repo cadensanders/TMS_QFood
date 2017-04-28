@@ -1,0 +1,18 @@
+
+@import "../../../@common/common.less";
+
+#@{el}-main.fullsize #@{el} .google-map-container		{ border-left-width: 0px; border-right-width: 0px; }
+
+#@{el}{
+
+	.border(@borderWidth) when (iscolor(@borderColor)) 	{ border: @borderWidth solid @borderColor; }
+	.google-map-container								{ .border(3px); }
+
+	.infoBox .item-data			{ max-height: (@height - 285); overflow: auto; }
+	.auto .infoBox .item-data	{ max-height: -webkit-calc(~"100vh - 355px"); max-height: calc(~"100vh - 355px"); }
+
+}
+
+.@{el}{
+	clear:both;
+}

@@ -1,0 +1,66 @@
+@include: common.neon
+
+@display:
+	label: Display
+	type: on-off
+	default: off
+	help: "Display or hide this element on page"
+	basic: true
+
+category:
+	label: Category
+	type: categories
+	taxonomy: items
+	default: 0
+	help: "Select category displayed on page"
+
+location:
+	label: Location
+	type: categories
+	taxonomy: locations
+	default: 0
+	help: "Select location displayed on page"
+
+orderby:
+	label: Order By
+	type: select
+	selected: date
+	# see http://codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters
+	default:
+		date: Creation Date
+		rand: Random
+		name: Alphabetically
+		none: Top Rated
+	help: 'Select order of items listed on page'
+
+order:
+	label: Order
+	type: select
+	selected: DESC
+	default:
+		ASC: Ascending
+		DESC: Descending
+	help: 'Select order of items listed on page'
+
+count:
+	label: Count
+	type: number
+	default: 99
+	help: "Number of items listed on page"
+
+onlyFeatured:
+	label: Display only "Featured Items"
+	type: on-off
+	default: off
+	help: "Show only featured items of the selected category"
+
+boxImageHeight:
+	label: Image Format
+	type: select
+	selected: "16:9"
+	default:
+		"1:1" : "1:1"
+		"2:1" : "2:1"
+		"4:3" : "4:3"
+		"16:9" : "16:9"
+	help: "Select format for images in carousel"

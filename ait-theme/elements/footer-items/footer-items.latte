@@ -1,0 +1,137 @@
+<div id="{$htmlId}" class="{$htmlClass}">
+
+	<div class="optiscroll">
+		<div class="footer-items-wrap optiscroll-content dragscroll">
+
+			{var $noFeatured = $options->theme->item->noFeatured}
+
+			{var $postType = 'ait-item'}
+			{var $lang = AitLangs::getCurrentLanguageCode()}
+			{var $count = $el->option(count)}
+			{var $orderBy = array()}
+			{var $order = $el->option(order)}
+
+			{var $metaQuery = array()}
+
+			{if $el->option(onlyFeatured)}
+				{var $metaQuery = array(
+					'relation'        => 'AND',
+					'featured_clause' => array(
+						'key'     => '_ait-item_item-featured',
+						'value'     => true,
+						'compare' => '='
+					)
+				)}
+			{else}
+				{var $metaQuery = array(
+					'relation'        => 'AND',
+					'featured_clause' => array(
+						'key'     => '_ait-item_item-featured',
+						'compare' => 'EXISTS'
+					)
+				)}
+
+				{var $orderBy => array(
+					'featured_clause' => 'DESC',
+				)}
+			{/if}
+
+
+			{var $taxQuery = array()}
+
+			{if $el->option(category) != 0}
+				{? array_push($taxQuery, array(
+					'taxonomy' 	=> 'ait-items',
+					'field'		=> 'term_id',
+					'terms'		=> $el->option(category)
+				))}
+			{/if}
+
+			{if $el->option(location) != 0}
+				{? array_push($taxQuery, array(
+					'taxonomy' 	=> 'ait-locations',
+					'field'		=> 'term_id',
+					'terms'		=> $el->option(location)
+				))}
+			{/if}
+
+
+			{if defined('AIT_REVIEWS_ENABLED') and $el->option(orderby) == 'none'}
+				{var $metaQuery['rating_clause'] = array(
+					'key'     => 'rating_mean',
+					'compare' => 'EXISTS'
+				)}
+				{var $orderBy['rating_clause'] = $order}
+			{/if}
+
+			{var $orderBy[$el->option(orderby)] = $order}
+
+			{var $args = array(
+				'lang'           => $lang,
+				'post_type'      => $postType,
+				'posts_per_page' => $count,
+				'meta_query'     => $metaQuery,
+				'tax_query'      => $taxQuery,
+				'orderby'        => $orderBy,
+			)}
+
+
+			{var $query = new WpLatteWpQuery($args)}
+
+			{if $query->havePosts}
+
+				{* Unified variables and data *}
+				{var $imageHeight = $el->option->boxImageHeight}
+				{var $imgWidth = 640}
+
+				{customLoop from $query as $item}
+					{var $meta = $item->meta('item-data')}
+
+					{var $dbFeatured = get_post_meta($item->id, '_ait-item_item-featured', true)}
+					{var $isFeatured = $dbFeatured != "" ? (bool)$dbFeatured : false }
+
+					<div n:class='item, image-present, $isFeatured ? item-featured, defined("AIT_REVIEWS_ENABLED") ? reviews-enabled'>
+
+						<a href="{$item->permalink}">
+							{var $ratio = explode(":", $imageHeight)}
+							{var $imgHeight = ($imgWidth / $ratio[0]) * $ratio[1]}
+							<div class="item-thumbnail">
+								<div class="item-thumbnail-wrap">
+									{if $item->hasImage}
+									<img src="{imageUrl $item->imageUrl, width => $imgWidth, height => $imgHeight, crop => 1}" alt="{!$item->title}">
+									{else}
+									<img src="{imageUrl $noFeatured, width => $imgWidth, height => $imgHeight, crop => 1}" alt="{!$item->title}">
+									{/if}
+								</div>
+								<div class="item-text-wrap">
+									<div class="item-title"><h3>{!$item->title}</h3></div>
+									<div class="item-categories">
+										{foreach $item->categories('ait-items') as $cat}
+											<span class="item-category">{!$cat->title}</span>
+										{/foreach}
+									</div>
+
+								</div>
+							</div>
+						</a>
+
+						{if defined('AIT_REVIEWS_ENABLED')}
+							{includePart "portal/parts/carousel-reviews-stars", item => $item, showCount => false}
+						{/if}
+
+					</div>
+
+				{/customLoop}
+			{else}
+				<div class="elm-item-organizer-container">
+					<div class="alert alert-info">
+						{_x 'Footer Items', 'name of element'}&nbsp;&nbsp;|&nbsp;&nbsp;{__ 'Info: There are no items created, add some please.'}
+					</div>
+				</div>
+			{/if}
+
+		</div>
+	</div>
+
+	{includePart "ait-theme/elements/footer-items/javascript"}
+</div>

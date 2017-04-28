@@ -1,0 +1,72 @@
+custom:
+	reset: true
+	options:
+		pageHtmlClass:
+			label: Custom Class
+			type: code
+			default: ""
+			help: "Write your custom class for own page identification"
+
+		layout:
+			label: Layout
+			type: select
+			selected: half
+			default:
+				full: Fullwidth
+				half: Half
+			help: 'Type of website layout'
+
+@sidebars:
+	reset: false
+	options:
+
+		right:
+			label: Right Sidebar
+			type: sidebar
+			default:
+				sidebar: none
+			help: "Select sidebar displayed on the right side of page"
+		left:
+			label: Left Sidebar
+			type: sidebar
+			default:
+				sidebar: none
+			help: "Select sidebar displayed on the left side of page"
+
+general:
+	reset: false
+	options:
+		enableWidgetAreas:
+			label: Footer Widgets Area
+			type: on-off
+			default: off
+			help: "Display footer widgets area"
+
+		enableFooterBar:
+			label: Footer Bar
+			type: on-off
+			default: on
+			help: "Display footer bar (copyright)"
+
+		showBreadcrumbs:
+			label: Breadcrumbs
+			type: on-off
+			default: off
+			help: "Display breadcrumbs"
+
+		headerType:
+			label: Header Type
+			type: select
+			selected: map
+			default:
+				revslider: Revolution Slider
+				map: Header Map
+				image: Image
+				none: None
+
+		- section(id: 'headerType-image', title: 'Image Options')
+
+		headerImage:
+			label: Header Image
+			type: image
+			default: ""

@@ -1,0 +1,24 @@
+/**************************************************/
+/*** && SPECIAL OFFERS CUSTOM STYLE             ***/
+/**************************************************/
+
+/*** ITEM DETAIL ***/
+
+.special-offers-container .item-header .img				{ .border-radius(5px 5px 0 0); }
+.special-offers-container .item-dates					{ background: lighten(@theme-general-pageBgColor, 10%); border: 1px solid @theme-general-linesColor; .border-radius(0 0 5px 5px); }
+.special-offers-container .navigation-arrows:hover		{ .box-shadow(@offer-btn-shadow); }
+
+/*** ARCHIVE SPECIAL OFFERS ***/
+
+.archive.post-type-archive-ait-special-offer {
+
+	.elm-content-main .elm-wrapper.elm-content-wrapper	{ padding: 0 25px; }
+
+	.items-container .layout-list .item					{ border: 1px solid rgba(0,0,0,0.06); background-clip: padding-box; .border-radius(5px); }
+	.items-container .layout-list .item:nth-child(2n+2)	{ background: lighten(@theme-general-pageBgColor, 5%); }
+	.items-container .layout-list .item-thumbnail		{ .border-radius(5px 0 0 5px); }
+	.items-container .layout-list .item-info-wrap		{ background: rgba(0,0,0,0.02); }
+
+}
+
+/* && end of SPECIAL OFFERS CUSTOM STYLE */

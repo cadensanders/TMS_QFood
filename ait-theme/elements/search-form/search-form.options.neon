@@ -1,0 +1,35 @@
+@include: common.neon
+
+type:
+	label: Type
+	type: select
+	selected: 1
+	default:
+		1: "Search Form"
+		2: "Search Sentence"
+	basic: true
+	help: "Select type of Search Form"
+
+radiusUnits:
+	label: Radius units
+	type: select
+	selected: km
+	default:
+		km: Kilometers
+		mi: Miles
+	basic: true
+	help: "Select units for radius"
+
+radiusHelp:
+	label: Radius Help
+	type: text
+	default: "Set radius for geolocation"
+	basic: true
+
+- section(id: type-2, title: '')
+
+sentence:
+	label: Search Sentence
+	type: text
+	default: "I would like to find {search-keyword} at {search-category} in {search-location} or {search-radius} around me"
+	help: "Write sentence represented the search form"
